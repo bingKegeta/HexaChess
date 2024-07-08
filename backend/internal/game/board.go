@@ -11,7 +11,7 @@ func NewBoard() *Board {
 }
 
 func (b *Board) IsValidPosition(pos Position) bool {
-	return pos.Q+pos.R+pos.S == 0 // In a cube coordinate system, q + r + s should always be 0
+	return (pos.Q+pos.R+pos.S == 0) && (pos.Q <= 5 && pos.Q >= -5) && (pos.R <= 5 && pos.R >= -5) && (pos.S <= 5 && pos.S >= -5) // In a cube coordinate system, q + r + s should always be 0
 }
 
 func (b *Board) GetPiece(pos Position) *Piece {

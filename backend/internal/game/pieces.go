@@ -31,7 +31,12 @@ type Position struct {
 	S int
 }
 
-func (p *Piece) ValidMoves(board *Board, start Position) []Position {
+type Moves struct {
+	positions []Position
+	captures  []Position
+}
+
+func (p *Piece) ValidMoves(board *Board, start Position) Moves {
 	switch p.T {
 	case King:
 		return validKingMoves(board, start)
@@ -46,37 +51,58 @@ func (p *Piece) ValidMoves(board *Board, start Position) []Position {
 	case Pawn:
 		return validPawnMoves(board, start, p.C)
 	}
-	return nil
+	return Moves{positions: nil, captures: nil}
 }
 
-func validPawnMoves(board *Board, start Position, c Color) []Position {
-	var positions []Position
+func validPawnMoves(board *Board, start Position, c Color) Moves {
+	var moves Moves
 	if c == P1 {
 
 		// Check for a single move forward
 		f1 := Position{Q: start.Q, R: start.R - 1, S: start.S + 1}
 		if board.IsValidPosition(f1) && board.GetPiece(f1) == nil {
-			positions = append(positions, f1)
+			moves.positions = append(moves.positions, f1)
 
 			// The only situation where the pawn can move 2 spaces is when it can move at least once
 			f2 := Position{Q: start.Q, R: start.R - 2, S: start.S + 2}
 			if board.IsValidPosition(f2) && board.GetPiece(f2) == nil {
-				positions = append(positions, f2)
+				moves.positions = append(moves.positions, f2)
 			}
+		}
+
+		// Check capture points
+		c1 := Position{Q: start.Q - 1, R: start.R, S: start.S + 1}
+		if board.IsValidPosition(c1) && board.GetPiece(c1) != nil {
+			moves.captures = append(moves.captures, c1)
+		}
+
+		c2 := Position{Q: start.Q + 1, R: start.R - 1, S: start.S}
+		if board.IsValidPosition(c2) && board.GetPiece(c2) != nil {
+			moves.captures = append(moves.captures, c2)
 		}
 
 	} else {
 
 		f1 := Position{Q: start.Q, R: start.R + 1, S: start.S - 1}
 		if board.IsValidPosition(f1) && board.GetPiece(f1) == nil {
-			positions = append(positions, f1)
+			moves.positions = append(moves.positions, f1)
 
 			f2 := Position{Q: start.Q, R: start.R + 2, S: start.S - 2}
 			if board.IsValidPosition(f2) && board.GetPiece(f2) == nil {
-				positions = append(positions, f2)
+				moves.positions = append(moves.positions, f2)
 			}
+		}
+
+		c1 := Position{Q: start.Q - 1, R: start.R + 1, S: start.S}
+		if board.IsValidPosition(c1) && board.GetPiece(c1) != nil {
+			moves.captures = append(moves.captures, c1)
+		}
+
+		c2 := Position{Q: start.Q + 1, R: start.R, S: start.S - 1}
+		if board.IsValidPosition(c2) && board.GetPiece(c2) != nil {
+			moves.captures = append(moves.captures, c2)
 		}
 	}
 
-	return positions
+	return moves
 }

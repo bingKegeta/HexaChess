@@ -19,20 +19,25 @@ func (b *Board) GetPiece(pos Position) *Piece {
 }
 
 func (b *Board) MovePiece(start, end Position) bool {
+	// Get the piece to be moved instead of passing it as a param
 	piece := b.GetPiece(start)
 	if piece == nil {
+		//* WRONG FUNCION CALL: The piece did not exist in the intended position
 		return false
 	}
 
-	validMoves := piece.ValidMoves(b, start)
-	for _, move := range validMoves {
-		if move == end {
-			b.Cells[end] = piece
-			delete(b.Cells, start)
-			return true
-		}
+	if b.GetPiece(end) != nil {
+		//* WRONG FUNCTION CALL: Piece already present here, should use capture method instead
+		return false
 	}
-	return false
+
+	// Finally set the piece to the position (assuming the coord was in bounds ofc)
+	if b.SetPiece(end, piece) {
+		return true
+	} else {
+		// In case it is out of bounds
+		return false
+	}
 }
 
 func (b *Board) SetPiece(pos Position, piece *Piece) bool {

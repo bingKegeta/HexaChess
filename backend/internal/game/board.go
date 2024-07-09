@@ -35,8 +35,25 @@ func (b *Board) MovePiece(start, end Position) bool {
 	return false
 }
 
-func (b *Board) SetPiece(pos Position, piece *Piece) {
+func (b *Board) SetPiece(pos Position, piece *Piece) bool {
 	if b.IsValidPosition(pos) {
 		b.Cells[pos] = piece
+		return true
+	}
+	return false
+}
+
+// This function removes the piece in the position and sets the new piece in that position
+// TODO Keep track of the captured pieces
+func (b *Board) Capture(pos Position, newPiece Piece) bool {
+	//* Bug if this gets passed
+	if b.GetPiece(pos) == nil {
+		return false
+	}
+
+	if b.SetPiece(pos, &newPiece) {
+		return true
+	} else {
+		return false
 	}
 }

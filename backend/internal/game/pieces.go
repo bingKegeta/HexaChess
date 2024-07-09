@@ -55,12 +55,12 @@ func validPawnMoves(board *Board, start Position, c Color) []Position {
 
 		// Check for a single move forward
 		f1 := Position{Q: start.Q, R: start.R - 1, S: start.S + 1}
-		if board.IsValidPosition(f1) && board.GetPiece(f1) != nil {
+		if board.IsValidPosition(f1) && board.GetPiece(f1) == nil {
 			positions = append(positions, f1)
 
 			// The only situation where the pawn can move 2 spaces is when it can move at least once
 			f2 := Position{Q: start.Q, R: start.R - 2, S: start.S + 2}
-			if board.IsValidPosition(f2) && board.GetPiece(f2) != nil {
+			if board.IsValidPosition(f2) && board.GetPiece(f2) == nil {
 				positions = append(positions, f2)
 			}
 		}
@@ -68,11 +68,11 @@ func validPawnMoves(board *Board, start Position, c Color) []Position {
 	} else {
 
 		f1 := Position{Q: start.Q, R: start.R + 1, S: start.S - 1}
-		if board.IsValidPosition(f1) && board.GetPiece(f1) != nil {
+		if board.IsValidPosition(f1) && board.GetPiece(f1) == nil {
 			positions = append(positions, f1)
 
 			f2 := Position{Q: start.Q, R: start.R + 2, S: start.S - 2}
-			if board.IsValidPosition(f2) && board.GetPiece(f2) != nil {
+			if board.IsValidPosition(f2) && board.GetPiece(f2) == nil {
 				positions = append(positions, f2)
 			}
 		}

@@ -38,16 +38,16 @@ type Moves struct {
 
 func (p *Piece) ValidMoves(board *Board, start Position) Moves {
 	switch p.T {
-	case King:
-		return validKingMoves(board, start)
-	case Queen:
-		return validQueenMoves(board, start)
+	// case King:
+	// 	return validKingMoves(board, start)
+	// case Queen:
+	// 	return validQueenMoves(board, start)
 	case Rook:
 		return validRookMoves(board, start)
-	case Bishop:
-		return validBishopMoves(board, start)
-	case Knight:
-		return validKnightMoves(board, start)
+	// case Bishop:
+	// 	return validBishopMoves(board, start)
+	// case Knight:
+	// 	return validKnightMoves(board, start)
 	case Pawn:
 		return validPawnMoves(board, start, p.C)
 	}
@@ -101,6 +101,111 @@ func validPawnMoves(board *Board, start Position, c Color) Moves {
 		c2 := Position{Q: start.Q + 1, R: start.R, S: start.S - 1}
 		if board.IsValidPosition(c2) && board.GetPiece(c2) != nil {
 			moves.captures = append(moves.captures, c2)
+		}
+	}
+
+	return moves
+}
+
+func validRookMoves(board *Board, start Position) Moves {
+	var moves Moves
+
+	// Check the q axis first
+	for i := 0; i < 6; i++ {
+		p1 := Position{Q: start.Q + i, R: start.R, S: start.S}
+		p2 := Position{Q: start.Q - i, R: start.R, S: start.S}
+		// Make sure valid positions first
+		if !board.IsValidPosition(p1) {
+			p1 = Position{Q: 8, R: 8, S: 8}
+		}
+		if !board.IsValidPosition(p2) {
+			p2 = Position{Q: 8, R: 8, S: 8}
+		}
+
+		// Check if positions are capture points for not
+		if board.GetPiece(p1) != nil || board.GetPiece(p2) != nil {
+			if p1.Q != 8 && board.GetPiece(p1) != nil {
+				moves.captures = append(moves.captures, p1)
+			}
+			if p2.Q != 8 && board.GetPiece(p2) != nil {
+				moves.captures = append(moves.captures, p2)
+			}
+
+			break
+		}
+
+		// The positions are on the board and not possible capture points, so add them to the movable positions
+		if p1.Q != 8 {
+			moves.positions = append(moves.positions, p1)
+		}
+		if p2.Q != 8 {
+			moves.positions = append(moves.positions, p2)
+		}
+	}
+
+	// check for r axis next
+	for i := 0; i < 6; i++ {
+		p1 := Position{Q: start.Q, R: start.R + i, S: start.S}
+		p2 := Position{Q: start.Q - i, R: start.R - i, S: start.S}
+		// Make sure valid positions first
+		if !board.IsValidPosition(p1) {
+			p1 = Position{Q: 8, R: 8, S: 8}
+		}
+		if !board.IsValidPosition(p2) {
+			p2 = Position{Q: 8, R: 8, S: 8}
+		}
+
+		// Check if positions are capture points for not
+		if board.GetPiece(p1) != nil || board.GetPiece(p2) != nil {
+			if p1.Q != 8 && board.GetPiece(p1) != nil {
+				moves.captures = append(moves.captures, p1)
+			}
+			if p2.Q != 8 && board.GetPiece(p2) != nil {
+				moves.captures = append(moves.captures, p2)
+			}
+
+			break
+		}
+
+		// The positions are on the board and not possible capture points, so add them to the movable positions
+		if p1.Q != 8 {
+			moves.positions = append(moves.positions, p1)
+		}
+		if p2.Q != 8 {
+			moves.positions = append(moves.positions, p2)
+		}
+	}
+
+	// finally check for the s axis
+	for i := 0; i < 6; i++ {
+		p1 := Position{Q: start.Q, R: start.R, S: start.S + i}
+		p2 := Position{Q: start.Q - i, R: start.R, S: start.S - i}
+		// Make sure valid positions first
+		if !board.IsValidPosition(p1) {
+			p1 = Position{Q: 8, R: 8, S: 8}
+		}
+		if !board.IsValidPosition(p2) {
+			p2 = Position{Q: 8, R: 8, S: 8}
+		}
+
+		// Check if positions are capture points for not
+		if board.GetPiece(p1) != nil || board.GetPiece(p2) != nil {
+			if p1.Q != 8 && board.GetPiece(p1) != nil {
+				moves.captures = append(moves.captures, p1)
+			}
+			if p2.Q != 8 && board.GetPiece(p2) != nil {
+				moves.captures = append(moves.captures, p2)
+			}
+
+			break
+		}
+
+		// The positions are on the board and not possible capture points, so add them to the movable positions
+		if p1.Q != 8 {
+			moves.positions = append(moves.positions, p1)
+		}
+		if p2.Q != 8 {
+			moves.positions = append(moves.positions, p2)
 		}
 	}
 

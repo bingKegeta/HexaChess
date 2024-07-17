@@ -1,16 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
-	"time"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+
+	"github.com/BingKegeta/Hexachess/backend/internal/api"
 )
 
-func greet(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World! %s", time.Now())
-}
-
 func main() {
-	http.HandleFunc("/", greet)
-	http.ListenAndServe(":8080", nil)
+	r := chi.NewRouter()
+	r.Use(middleware.DefaultLogger)
+
+	r.Get("/board", api.GetBoard)
+
+	http.ListenAndServe(":8000", r)
 }

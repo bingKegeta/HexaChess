@@ -1,13 +1,35 @@
 package game
 
+import "encoding/json"
+
 type Board struct {
 	Cells map[Position]*Piece
+}
+
+type CellEntry struct {
+	Position Position `json:"Position"`
+	Piece    Piece    `json:"Piece"`
 }
 
 func NewBoard() *Board {
 	return &Board{
 		Cells: make(map[Position]*Piece),
 	}
+}
+
+func (b *Board) MarshalJSON() ([]byte, error) {
+	var cellsSlice []CellEntry
+	for pos, piece := range b.Cells {
+		cellsSlice = append(cellsSlice, CellEntry{
+			Position: pos,
+			Piece:    *piece,
+		})
+	}
+	return json.Marshal(struct {
+		Cells []CellEntry `json:"Cells"`
+	}{
+		Cells: cellsSlice,
+	})
 }
 
 func (b *Board) IsValidPosition(pos Position) bool {

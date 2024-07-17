@@ -21,19 +21,19 @@ const (
 )
 
 type Piece struct {
-	T PieceType
-	C Color
+	T PieceType `json:"T"`
+	C Color     `json:"C"`
 }
 
 type Position struct {
-	Q int
-	R int
-	S int
+	Q int `json:"Q"`
+	R int `json:"R"`
+	S int `json:"S"`
 }
 
 type Moves struct {
-	positions []Position
-	captures  []Position
+	Positions []Position `json:"positions"`
+	Captures  []Position `json:"captures"`
 }
 
 func (p *Piece) ValidMoves(board *Board, start Position) Moves {
@@ -51,7 +51,7 @@ func (p *Piece) ValidMoves(board *Board, start Position) Moves {
 	case Pawn:
 		return validPawnMoves(board, start, p.C)
 	}
-	return Moves{positions: nil, captures: nil}
+	return Moves{Positions: nil, Captures: nil}
 }
 
 func validPawnMoves(board *Board, start Position, c Color) Moves {
@@ -61,46 +61,46 @@ func validPawnMoves(board *Board, start Position, c Color) Moves {
 		// Check for a single move forward
 		f1 := Position{Q: start.Q, R: start.R - 1, S: start.S + 1}
 		if board.IsValidPosition(f1) && board.GetPiece(f1) == nil {
-			moves.positions = append(moves.positions, f1)
+			moves.Positions = append(moves.Positions, f1)
 
 			// The only situation where the pawn can move 2 spaces is when it can move at least once
 			f2 := Position{Q: start.Q, R: start.R - 2, S: start.S + 2}
 			if board.IsValidPosition(f2) && board.GetPiece(f2) == nil {
-				moves.positions = append(moves.positions, f2)
+				moves.Positions = append(moves.Positions, f2)
 			}
 		}
 
 		// Check capture points
 		c1 := Position{Q: start.Q - 1, R: start.R, S: start.S + 1}
 		if board.IsValidPosition(c1) && board.GetPiece(c1) != nil {
-			moves.captures = append(moves.captures, c1)
+			moves.Captures = append(moves.Captures, c1)
 		}
 
 		c2 := Position{Q: start.Q + 1, R: start.R - 1, S: start.S}
 		if board.IsValidPosition(c2) && board.GetPiece(c2) != nil {
-			moves.captures = append(moves.captures, c2)
+			moves.Captures = append(moves.Captures, c2)
 		}
 
 	} else {
 
 		f1 := Position{Q: start.Q, R: start.R + 1, S: start.S - 1}
 		if board.IsValidPosition(f1) && board.GetPiece(f1) == nil {
-			moves.positions = append(moves.positions, f1)
+			moves.Positions = append(moves.Positions, f1)
 
 			f2 := Position{Q: start.Q, R: start.R + 2, S: start.S - 2}
 			if board.IsValidPosition(f2) && board.GetPiece(f2) == nil {
-				moves.positions = append(moves.positions, f2)
+				moves.Positions = append(moves.Positions, f2)
 			}
 		}
 
 		c1 := Position{Q: start.Q - 1, R: start.R + 1, S: start.S}
 		if board.IsValidPosition(c1) && board.GetPiece(c1) != nil {
-			moves.captures = append(moves.captures, c1)
+			moves.Captures = append(moves.Captures, c1)
 		}
 
 		c2 := Position{Q: start.Q + 1, R: start.R, S: start.S - 1}
 		if board.IsValidPosition(c2) && board.GetPiece(c2) != nil {
-			moves.captures = append(moves.captures, c2)
+			moves.Captures = append(moves.Captures, c2)
 		}
 	}
 
@@ -114,7 +114,7 @@ func validRookMoves(board *Board, start Position) Moves {
 	for i := 0; i < 6; i++ {
 		p1 := Position{Q: start.Q + i, R: start.R, S: start.S}
 		p2 := Position{Q: start.Q - i, R: start.R, S: start.S}
-		// Make sure valid positions first
+		// Make sure valid Positions first
 		if !board.IsValidPosition(p1) {
 			p1 = Position{Q: 8, R: 8, S: 8}
 		}
@@ -122,24 +122,24 @@ func validRookMoves(board *Board, start Position) Moves {
 			p2 = Position{Q: 8, R: 8, S: 8}
 		}
 
-		// Check if positions are capture points for not
+		// Check if Positions are capture points for not
 		if board.GetPiece(p1) != nil || board.GetPiece(p2) != nil {
 			if p1.Q != 8 && board.GetPiece(p1) != nil {
-				moves.captures = append(moves.captures, p1)
+				moves.Captures = append(moves.Captures, p1)
 			}
 			if p2.Q != 8 && board.GetPiece(p2) != nil {
-				moves.captures = append(moves.captures, p2)
+				moves.Captures = append(moves.Captures, p2)
 			}
 
 			break
 		}
 
-		// The positions are on the board and not possible capture points, so add them to the movable positions
+		// The Positions are on the board and not possible capture points, so add them to the movable Positions
 		if p1.Q != 8 {
-			moves.positions = append(moves.positions, p1)
+			moves.Positions = append(moves.Positions, p1)
 		}
 		if p2.Q != 8 {
-			moves.positions = append(moves.positions, p2)
+			moves.Positions = append(moves.Positions, p2)
 		}
 	}
 
@@ -147,7 +147,7 @@ func validRookMoves(board *Board, start Position) Moves {
 	for i := 0; i < 6; i++ {
 		p1 := Position{Q: start.Q, R: start.R + i, S: start.S}
 		p2 := Position{Q: start.Q - i, R: start.R - i, S: start.S}
-		// Make sure valid positions first
+		// Make sure valid Positions first
 		if !board.IsValidPosition(p1) {
 			p1 = Position{Q: 8, R: 8, S: 8}
 		}
@@ -155,24 +155,24 @@ func validRookMoves(board *Board, start Position) Moves {
 			p2 = Position{Q: 8, R: 8, S: 8}
 		}
 
-		// Check if positions are capture points for not
+		// Check if Positions are capture points for not
 		if board.GetPiece(p1) != nil || board.GetPiece(p2) != nil {
 			if p1.Q != 8 && board.GetPiece(p1) != nil {
-				moves.captures = append(moves.captures, p1)
+				moves.Captures = append(moves.Captures, p1)
 			}
 			if p2.Q != 8 && board.GetPiece(p2) != nil {
-				moves.captures = append(moves.captures, p2)
+				moves.Captures = append(moves.Captures, p2)
 			}
 
 			break
 		}
 
-		// The positions are on the board and not possible capture points, so add them to the movable positions
+		// The Positions are on the board and not possible capture points, so add them to the movable Positions
 		if p1.Q != 8 {
-			moves.positions = append(moves.positions, p1)
+			moves.Positions = append(moves.Positions, p1)
 		}
 		if p2.Q != 8 {
-			moves.positions = append(moves.positions, p2)
+			moves.Positions = append(moves.Positions, p2)
 		}
 	}
 
@@ -180,7 +180,7 @@ func validRookMoves(board *Board, start Position) Moves {
 	for i := 0; i < 6; i++ {
 		p1 := Position{Q: start.Q, R: start.R, S: start.S + i}
 		p2 := Position{Q: start.Q - i, R: start.R, S: start.S - i}
-		// Make sure valid positions first
+		// Make sure valid Positions first
 		if !board.IsValidPosition(p1) {
 			p1 = Position{Q: 8, R: 8, S: 8}
 		}
@@ -188,24 +188,24 @@ func validRookMoves(board *Board, start Position) Moves {
 			p2 = Position{Q: 8, R: 8, S: 8}
 		}
 
-		// Check if positions are capture points for not
+		// Check if Positions are capture points for not
 		if board.GetPiece(p1) != nil || board.GetPiece(p2) != nil {
 			if p1.Q != 8 && board.GetPiece(p1) != nil {
-				moves.captures = append(moves.captures, p1)
+				moves.Captures = append(moves.Captures, p1)
 			}
 			if p2.Q != 8 && board.GetPiece(p2) != nil {
-				moves.captures = append(moves.captures, p2)
+				moves.Captures = append(moves.Captures, p2)
 			}
 
 			break
 		}
 
-		// The positions are on the board and not possible capture points, so add them to the movable positions
+		// The Positions are on the board and not possible capture points, so add them to the movable Positions
 		if p1.Q != 8 {
-			moves.positions = append(moves.positions, p1)
+			moves.Positions = append(moves.Positions, p1)
 		}
 		if p2.Q != 8 {
-			moves.positions = append(moves.positions, p2)
+			moves.Positions = append(moves.Positions, p2)
 		}
 	}
 

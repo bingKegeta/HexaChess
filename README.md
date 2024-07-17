@@ -46,6 +46,7 @@ Key:
 | Create Board Coordinate System                   |   ✅   |
 | Add Board Boundary Checks                        |   ✅   |
 | Set the pieces on the Board                      |   ✅   |
+| Create Skeleton for RESTful API to play the game |   🟡   |
 | Capturing Functions                              |   🟡   |
 | Piece Movement Functions                         |   🟡   |
 | Successfully start a new game                    |   🟡   |

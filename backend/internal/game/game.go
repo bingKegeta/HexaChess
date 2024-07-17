@@ -41,7 +41,7 @@ func (g *Game) SetupPieces() {
 
 	// Set up the bishops
 	for i := 3; i < 6; i++ {
-		g.Board.SetPiece(Position{Q: 0, R: i, S: -1 * i}, &Piece{T: Bishop, C: P1})
+		g.Board.SetPiece(Position{Q: 0, R: -i, S: i}, &Piece{T: Bishop, C: P1})
 	}
 
 	// Set up the rooks

@@ -6,28 +6,31 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func CreateUser(username, password, email string) error {
+func CreateUser(username, password, email string) (int64, error) {
 	query := `INSERT INTO users (username, password, email) VALUES (?, ?, ?)`
 
 	db := GetDB()
 
 	hashedPwBy, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 	if err != nil {
-		return err
+		return -1, err
 	}
 
 	hashedPw := string(hashedPwBy)
 
-	_, err = db.Exec(query, username, hashedPw, email)
+	res, err := db.Exec(query, username, hashedPw, email)
+	if err != nil {
+		return -1, err
+	}
 
-	return err
+	return res.LastInsertId()
 }
 
-func GetUserByEmail(email, password string) (*sql.Row, error) {
-	query := `SELECT * FROM users WHERE email = ?`
+func GetUserByEmail(identifier string) *sql.Row {
+	query := `SELECT * FROM users WHERE email = ? OR username = ?`
 
 	db := GetDB()
 
-	result := db.QueryRow(query, email)
-	return result, nil
+	result := db.QueryRow(query, identifier, identifier)
+	return result
 }
